@@ -1,0 +1,63 @@
+<form class="example-form" (ngSubmit)="addToCatalog()">
+  <mat-form-field class="example-full-width">
+    <mat-label>Ajouter un catalogue</mat-label>
+    <input
+      type="text"
+      placeholder="Saisisez le nom d'un catalogue"
+      aria-label="Catalogues"
+      matInput
+      [formControl]="search"
+      [matAutocomplete]="auto"
+    />
+    <mat-autocomplete
+      autoActiveFirstOption
+      #auto="matAutocomplete"
+      [displayWith]="displayFn"
+    >
+      <mat-option
+        *ngFor="let catalog of filteredCatalogs | async"
+        [value]="catalog"
+      >
+        <mat-icon *ngIf="catalog.type === CatalogType.private">lock</mat-icon>
+        {{catalog.name}}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+</form>
+<h3>Catalogue publiques</h3>
+<div cdkDropList class="example-list" (cdkDropListDropped)="dropPublic($event)">
+  <div
+    class="example-box"
+    *ngFor="let catalog of publicCatalogs"
+    [cdkDragData]="catalog"
+    cdkDrag
+  >
+    {{catalog.name}}
+    <button mat-button color="warn" (click)="removePublic(catalog)">
+      Suprimer
+    </button>
+  </div>
+</div>
+<h3>Catalogue privés</h3>
+<div
+  cdkDropList
+  class="example-list"
+  (cdkDropListDropped)="dropPrivate($event)"
+>
+  <div
+    class="example-box"
+    *ngFor="let catalog of privateCatalogs"
+    [cdkDragData]="catalog"
+    cdkDrag
+  >
+    <mat-icon *ngIf="catalog.type === CatalogType.private">lock</mat-icon>
+    {{catalog.name}}
+    <button mat-button color="warn" (click)="removePrivate(catalog)">
+      Suprimer
+    </button>
+  </div>
+</div>
+
+<!-- Copyright 2021 Google LLC. All Rights Reserved.
+    Use of this source code is governed by an MIT-style license that
+    can be found in the LICENSE file at http://angular.io/license -->
